@@ -31,7 +31,7 @@ namespace Ornament.WebSockets
         /// <typeparam name="T"></typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddWebSocketPrototype<T>(this IServiceCollection services)
+        public static IServiceCollection AddWebSockeProtocol<T>(this IServiceCollection services)
             where T : IWebSocketProtocol
 
         {
@@ -52,8 +52,9 @@ namespace Ornament.WebSockets
         {
             if (webSocketSetting == null)
                 throw new ArgumentNullException(nameof(webSocketSetting));
-            app.UseWebSockets();
-            app.Use(async (http, next) =>
+            app
+                .UseWebSockets()
+            .Use(async (http, next) =>
             {
                 if (http.WebSockets.IsWebSocketRequest)
                 {

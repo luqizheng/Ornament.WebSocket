@@ -8,6 +8,14 @@
     "NETStandard.Library": "1.6.1",
     "System.Net.WebSockets": "4.3.0"
   },
+  "packOptions": {
+    "repository": {
+      "url": "https://github.com/luqizheng/Ornament.WebSocket"
+    },
+    "projectUrl": "https://github.com/luqizheng/Ornament.WebSocket",
+    "tags": [ "WebSocket", "DotnetCore","Ornament"],
+    "summary": "Wrap webosocket of Dotnet core and let it easy to use."
+  },
 
   "frameworks": {
     "netstandard1.6": {

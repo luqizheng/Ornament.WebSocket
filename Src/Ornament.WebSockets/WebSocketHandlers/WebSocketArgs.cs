@@ -7,6 +7,8 @@ namespace Ornament.WebSockets.WebSocketHandlers
     {
         public WebSocketArgs(OrnamentWebSocket webSocket, HttpContext http)
         {
+            if (webSocket == null) throw new ArgumentNullException(nameof(webSocket));
+            if (http == null) throw new ArgumentNullException(nameof(http));
             WebSocket = webSocket;
             Http = http;
         }

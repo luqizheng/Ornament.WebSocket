@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq.Expressions;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -51,72 +52,40 @@ namespace Ornament.WebSockets
         public Task SendAsnyc(byte[] bytes, int maxLength, WebSocketMessageType messageType,
             CancellationToken cancellationToken)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
-                var splitInfo = Split(maxLength, bytes.Length);
-                for (var index = 0; index < splitInfo.Length; index++)
+                RunPart(maxLength, bytes.Length, (start, length, isLast) =>
                 {
-                    var info = splitInfo[index];
-                    var arraySegment = new ArraySegment<byte>(bytes, info.Start, info.Length);
-                    var isEnd = index >= splitInfo.Length;
-                    await
-                        _socket.SendAsync(
-                            arraySegment,
-                            messageType,
-                            isEnd,
-                            cancellationToken);
-                }
+                    var arraySegment = new ArraySegment<byte>(bytes, start, length);
+
+                    _socket.SendAsync(
+                        arraySegment,
+                        messageType,
+                        isLast,
+                        cancellationToken).Wait(cancellationToken);
+                });
             }, cancellationToken);
         }
 
-        //public Task SendBinAsync(Stream stream, CancellationToken cancellationToken)
-        //{
-        //    return Task.Run(() =>
-        //    {
-        //        var bytes = new byte[bufferLenght];
-        //        Task task = null;
-        //        while (stream.Read(bytes, 0, bufferLenght) == bufferLenght)
-        //        {
-        //            task = _socket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Binary, false,
-        //                cancellationToken);
-        //            task.Wait(cancellationToken);
-        //        }
-        //        task = _socket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Binary, true,
-        //            cancellationToken);
-        //        task.Wait(cancellationToken);
-        //    }, cancellationToken);
-        //}
-
-
-        private static SplitInfo[] Split(int maxLength, int totalLength)
+        public static void RunPart(int eachPartLength, int totalLength, 
+            Action<int, int, bool> action)
         {
-            var length = Convert.ToInt32(totalLength / maxLength);
+            var length = Convert.ToInt32(totalLength / eachPartLength);
+            var start = 0;
+            var remind = totalLength % eachPartLength;
+            for (var i = 0; i < length; i++)
+            {
+                start = i * eachPartLength;
+                var isEnd = remind == 0 && i == length - 1;
+                action(start, eachPartLength, isEnd);
+            }
 
-            var result = new SplitInfo[length + 1];
-            var step = 0;
-            for (step = 0; step < length; step++)
-                result[step] = new SplitInfo
-                {
-                    Length = maxLength,
-                    Start = step * maxLength
-                };
-
-
-            var remind = totalLength % maxLength;
             if (remind != 0)
-                result[step] = new SplitInfo
-                {
-                    Start = totalLength - maxLength * length,
-                    Length = remind
-                };
-            return result;
+            {
+                action(start, remind, true);
+            }
         }
 
 
-        private struct SplitInfo
-        {
-            public int Start { get; set; }
-            public int Length { get; set; }
-        }
     }
 }

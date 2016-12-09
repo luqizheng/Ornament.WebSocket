@@ -21,7 +21,7 @@ namespace Ornament.WebSockets.WebSocketHandlers
         }
 
         public WebSocketHandler(IServiceProvider serviceProvider, IWebSocketProtocol protocol)
-            :this(serviceProvider)
+            : this(serviceProvider)
         {
             if (protocol == null) throw new ArgumentNullException(nameof(protocol));
             _protocol = protocol;
@@ -62,12 +62,12 @@ namespace Ornament.WebSockets.WebSocketHandlers
             Closed?.Invoke(this, new WebSocketArgs(oWebSocket, http));
         }
 
-        protected virtual void OnConnecting(OrnamentWebSocket oWebSocket, HttpContext http)
+        private void OnConnecting(OrnamentWebSocket oWebSocket, HttpContext http)
         {
             Connecting?.Invoke(this, new WebSocketArgs(oWebSocket, http));
         }
 
-        protected virtual void OnReceived(OrnamentWebSocket oWebSocket, HttpContext http, byte[] content)
+        private void OnReceived(OrnamentWebSocket oWebSocket, HttpContext http, byte[] content)
         {
             Received?.Invoke(this, new WebSocketReceivedArgs(oWebSocket, http, content));
         }
