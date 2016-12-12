@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Ornament.WebSockets.WebSocketHandlers
+namespace Ornament.WebSockets.Handlers
 {
     public class WebSocketHandlerManager
     {
@@ -16,23 +16,23 @@ namespace Ornament.WebSockets.WebSocketHandlers
             _manager = manager;
         }
 
-        internal void RegistHanler(string path, WebSocketHandler handler)
+        public void RegistHanler(string path, WebSocketHandler handler)
         {
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler));
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
-            _pathHandlersMappings.Add(path, handler);
+            _pathHandlersMappings.Add(path.ToUpper(), handler);
             handler.WebSocketManager = _manager;
         }
 
-        internal WebSocketHandler GetHandler(string paht)
+        public WebSocketHandler GetHandler(string paht)
         {
             return _pathHandlersMappings[paht.ToUpper()]
                 ;
         }
 
-        internal bool ContainsHandler(string path)
+        public bool ContainsHandler(string path)
         {
             return _pathHandlersMappings.ContainsKey(path.ToUpper());
         }

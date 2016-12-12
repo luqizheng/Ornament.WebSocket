@@ -9,4 +9,5 @@ namespace Ornament.WebSockets.WebSocketProtocols
 
         TObject GetObject<TObject>(byte[] bytes);
     }
+
 }

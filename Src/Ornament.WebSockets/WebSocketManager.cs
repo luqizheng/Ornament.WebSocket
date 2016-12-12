@@ -8,13 +8,16 @@ namespace Ornament.WebSockets
 {
     public class WebSocketManager
     {
+        /// <summary>
+        /// Key is id, values is ornamentWEbSockets
+        /// </summary>
         private readonly ConcurrentDictionary<string, OrnamentWebSocket> _pools =
             new ConcurrentDictionary<string, OrnamentWebSocket>();
 
 
-        internal OrnamentWebSocket AddNewSocket(WebSocket socket, IWebSocketProtocol protocol)
+        internal OrnamentWebSocket AddNewSocket(WebSocket socket)
         {
-            var result = new OrnamentWebSocket(socket) {Protocol = protocol};
+            var result = new OrnamentWebSocket(socket);
             _pools.TryAdd(result.Id, result);
             return result;
         }
@@ -44,6 +47,11 @@ namespace Ornament.WebSockets
             if (id == null) throw new ArgumentNullException(nameof(id));
             OrnamentWebSocket closingOrnamentWebOrnamentWebSocket;
             _pools.TryRemove(id, out closingOrnamentWebOrnamentWebSocket);
+        }
+
+        public int CountClients()
+        {
+            return _pools.Count;
         }
     }
 }

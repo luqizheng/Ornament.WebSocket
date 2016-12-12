@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Ornament.WebSockets.WebSocketHandlers;
+using Ornament.WebSockets.Handlers;
 using Ornament.WebSockets.WebSocketProtocols;
 
 namespace Ornament.WebSockets
@@ -52,8 +52,7 @@ namespace Ornament.WebSockets
         {
             if (webSocketSetting == null)
                 throw new ArgumentNullException(nameof(webSocketSetting));
-            app
-                .UseWebSockets()
+            app.UseWebSockets()
             .Use(async (http, next) =>
             {
                 if (http.WebSockets.IsWebSocketRequest)
@@ -65,6 +64,11 @@ namespace Ornament.WebSockets
                         var handler = manager.GetHandler(http.Request.Path);
                         await handler.Attach(http, webSocket);
                     }
+                    else
+                    {
+                        throw new OranmentWebSocketException($"Cannot find WebSocketHandler for " + http.Request.Path);
+                    }
+
                 }
                 else
                 {
@@ -72,7 +76,7 @@ namespace Ornament.WebSockets
                 }
             });
             var handlerManager = app.ApplicationServices.GetService<WebSocketHandlerManager>();
-            webSocketSetting(new WebSocketHandlerBuilder(app.ApplicationServices, handlerManager));
+            webSocketSetting(new WebSocketHandlerBuilder(handlerManager));
             return app;
         }
     }

@@ -13,6 +13,7 @@ namespace Ornament.WebSockets
     {
         private readonly WebSocket _socket;
         private readonly int _bufferLenght = 4096;
+      
 
         public OrnamentWebSocket(WebSocket socket, int bufferLength = 4096)
         {
@@ -26,17 +27,8 @@ namespace Ornament.WebSockets
 
 
         public string Id { get; }
-        public IWebSocketProtocol Protocol { get; set; }
 
-        public Task SendByText<TObject>(TObject t)
-        {
-            if (t == null)
-                throw new ArgumentNullException(nameof(t));
-            if (Protocol == null)
-                throw new ArgumentException("Do not found Protocol for this WebSocket connection");
-            var bytes = Protocol.ToObject(t);
-            return SendAsnyc(bytes, _bufferLenght, WebSocketMessageType.Text, CancellationToken.None);
-        }
+        public bool IsOpen => _socket.State == WebSocketState.Open;
 
         public Task SendTextAsnyc(string sendContent)
         {
@@ -67,7 +59,7 @@ namespace Ornament.WebSockets
             }, cancellationToken);
         }
 
-        public static void RunPart(int eachPartLength, int totalLength, 
+        public static void RunPart(int eachPartLength, int totalLength,
             Action<int, int, bool> action)
         {
             var length = Convert.ToInt32(totalLength / eachPartLength);

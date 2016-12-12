@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="reconnecting-websocket.js"></script>
+</head>
+<body>
+    <div id="screen" style="height: 300px;width: 100%; background: black;color:#fff">
+
+    </div>
+    <input type="text" id="input-text" />
+    <button onclick="send()">send</button>
+    <script type="text/javascript">
+        var ws = new ReconnectingWebSocket('ws://localhost:52470/repeat');
+
+        ws.onopen = function (msg) {
+            setText("连接上服务器");
+
+        };
+        ws.onclose = function (msg) {
+            setText("断开服务器");
+        }
+        ws.onmessage = function (msg) {
+            setText(msg.data);
+        };
+        function send() {
+
+            var text = document.getElementById("input-text").value;
+            ws.send(text);
+        }
+
+
+        function setText(text) {
+            var d = document.getElementById("screen");
+            d.innerHTML += "<br>" + text;
+        }
+
+      
+    </script>
+</body>
+</html>
