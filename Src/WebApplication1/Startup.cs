@@ -26,8 +26,10 @@ namespace WebApplication1
         {
             app.UseOrnamentWebSocket(setting =>
             {
-                //text send and reply
+                //text send and reply,client code on quickStart.html;
                 setting.Demo1();
+                //upload file demo; client code on uploadFile.html
+                setting.FileUploadDemo();
             });
 
             loggerFactory.AddConsole();
