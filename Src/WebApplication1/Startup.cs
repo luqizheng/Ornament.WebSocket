@@ -1,10 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Ornament.WebSockets;
+using WebApplication1.Models;
 
 namespace WebApplication1
 {
@@ -22,22 +26,18 @@ namespace WebApplication1
         {
             app.UseOrnamentWebSocket(setting =>
             {
-                var handler = setting.AddText("/repeat");
-                handler.OnConnecting = (websocket, http, manager) =>
-                {
-                    websocket.SendTextAsnyc("登录,当前在线人数" + manager.CountClients());
-                };
-                handler.OnReceived = (websocket, http, text, manager) => { websocket.SendTextAsnyc("系统收到：" + text); };
-                handler.OnClosed = (http, manager) =>
-                {
-                    manager.GetClients().SendTextAsnyc("logout，客户端数目：" + manager.CountClients(), CancellationToken.None);
-                };
+                //text send and reply
+                setting.Demo1();
             });
 
             loggerFactory.AddConsole();
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+
+
+            app.UseDefaultFiles();
+
             app.UseStaticFiles();
 
         }

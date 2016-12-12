@@ -6,11 +6,12 @@
     <script src="reconnecting-websocket.js"></script>
 </head>
 <body>
-    <div id="screen" style="height: 300px;width: 100%; background: black;color:#fff">
+    <div id="screen" style="background: black; color: #fff; height: 300px; width: 100%;">
 
     </div>
     <input type="text" id="input-text" />
     <button onclick="send()">send</button>
+    <button onclick="send4k()">send over 4k text</button>
     <script type="text/javascript">
         var ws = new ReconnectingWebSocket('ws://localhost:52470/repeat');
 
@@ -20,23 +21,34 @@
         };
         ws.onclose = function (msg) {
             setText("断开服务器");
-        }
+        };
         ws.onmessage = function (msg) {
             setText(msg.data);
         };
+
         function send() {
 
             var text = document.getElementById("input-text").value;
             ws.send(text);
         }
-
+        function send4k() {
+            var str = "abcdefghijklmnopqrstuvwxyz1234567890";
+            while (true) {
+                if (str.length > 4096) {
+                    break;
+                }
+                str += str;
+            }
+            var text = str.length + str + str.length;
+            ws.send(text);
+        }
 
         function setText(text) {
             var d = document.getElementById("screen");
             d.innerHTML += "<br>" + text;
         }
 
-      
+
     </script>
 </body>
 </html>

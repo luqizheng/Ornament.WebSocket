@@ -9,7 +9,7 @@ namespace Ornament.WebSockets.Handlers
 {
     public abstract class WebSocketHandler
     {
-        public Action<HttpContext, WebSocketManager> OnClosed;
+        public Action<OrnamentWebSocket, HttpContext, WebSocketManager> OnClosed;
         public Action<OrnamentWebSocket, HttpContext, WebSocketManager> OnConnecting;
 
 
@@ -40,7 +40,7 @@ namespace Ornament.WebSockets.Handlers
                 OnReceivedData(oWebSocket, http, buffer.ToArray(), socketReceiveResult, WebSocketManager);
             }
             WebSocketManager.Remove(oWebSocket.Id);
-            OnClosed?.Invoke(http, WebSocketManager);
+            OnClosed?.Invoke(oWebSocket, http, WebSocketManager);
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using Microsoft.AspNetCore.Http;
@@ -17,14 +18,20 @@ namespace Ornament.WebSockets.Handlers
         {
             if (receiveResult.EndOfMessage)
             {
-                if (CallByCompleteMessage)
+                if (CallByCompleteMessage && Buffer.Any())
                 {
-                    Buffer.AddRange(Buffer.ToArray());
+                    Buffer.AddRange(content);
+
                     content = Buffer.ToArray();
+                    this.Buffer.Clear();
                 }
 
-                var message = Encoding.UTF8.GetString(content);
+                var message = Encoding.UTF8.GetString(content, 0, receiveResult.Count);
                 OnReceived?.Invoke(oWebSocket, http, message, manager);
+            }
+            else
+            {
+                Buffer.AddRange(content);
             }
         }
     }
