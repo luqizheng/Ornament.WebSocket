@@ -7,8 +7,8 @@ namespace Ornament.WebSockets.Handlers
 {
     public class FileHandler : WebSocketHandler
     {
-        private string _currentPath = null;
         private readonly string _folder;
+        private string _currentPath;
 
         public FileHandler(string folder)
         {
@@ -34,7 +34,6 @@ namespace Ornament.WebSockets.Handlers
                 File.Move(file + ".uploading", file + ".tmp");
                 OnReceived?.Invoke(oWebSocket, http, manager, new FileInfo(file + ".tmp"));
             }
-
         }
     }
 }

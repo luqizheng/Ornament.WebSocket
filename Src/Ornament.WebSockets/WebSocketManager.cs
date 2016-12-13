@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.WebSockets;
+using Microsoft.AspNetCore.Http;
 using Ornament.WebSockets.WebSocketProtocols;
 
 namespace Ornament.WebSockets
@@ -15,9 +16,11 @@ namespace Ornament.WebSockets
             new ConcurrentDictionary<string, OrnamentWebSocket>();
 
 
-        internal OrnamentWebSocket AddNewSocket(WebSocket socket)
+        internal OrnamentWebSocket AddNewSocket(WebSocket socket,HttpContext http)
         {
             var result = new OrnamentWebSocket(socket);
+           
+
             _pools.TryAdd(result.Id, result);
             return result;
         }

@@ -1,19 +1,16 @@
 ﻿using System;
-using System.IO;
-using System.Linq.Expressions;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Ornament.WebSockets.WebSocketProtocols;
 
 namespace Ornament.WebSockets
 {
     public class OrnamentWebSocket
     {
+        private readonly int _bufferLenght;
         private readonly WebSocket _socket;
-        private readonly int _bufferLenght = 4096;
-      
+
 
         public OrnamentWebSocket(WebSocket socket, int bufferLength = 4096)
         {
@@ -29,6 +26,8 @@ namespace Ornament.WebSockets
         public string Id { get; }
 
         public bool IsOpen => _socket.State == WebSocketState.Open;
+
+        public string SubProtocol => _socket.SubProtocol;
 
         public Task SendTextAsnyc(string sendContent)
         {
@@ -62,22 +61,18 @@ namespace Ornament.WebSockets
         public static void RunPart(int eachPartLength, int totalLength,
             Action<int, int, bool> action)
         {
-            var length = Convert.ToInt32(totalLength / eachPartLength);
+            var length = Convert.ToInt32(totalLength/eachPartLength);
             var start = 0;
-            var remind = totalLength % eachPartLength;
+            var remind = totalLength%eachPartLength;
             for (var i = 0; i < length; i++)
             {
-                start = i * eachPartLength;
-                var isEnd = remind == 0 && i == length - 1;
+                start = i*eachPartLength;
+                var isEnd = (remind == 0) && (i == length - 1);
                 action(start, eachPartLength, isEnd);
             }
 
             if (remind != 0)
-            {
                 action(start, remind, true);
-            }
         }
-
-
     }
 }

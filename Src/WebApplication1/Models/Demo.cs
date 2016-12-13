@@ -15,10 +15,14 @@ namespace WebApplication1.Models
             handler.OnConnecting = (websocket, http, manager) =>
             {
                 websocket.SendTextAsnyc("logon,online users is:" + manager.CountClients());
-                websocket.SendTextAsnyc("Your Id is :" + websocket.Id);
+                websocket.SendTextAsnyc("Your Id is :" + websocket.Id +" protocol :"+websocket.SubProtocol);
             };
             handler.OnReceived = (websocket, http, text, manager) =>
             {
+                if (text == "error")
+                {
+                    throw new Exception("server exception for test");
+                }
                 if (text.Length > 4096)
                 {
                     websocket.SendTextAsnyc("system receive data's length:" + text.Length);

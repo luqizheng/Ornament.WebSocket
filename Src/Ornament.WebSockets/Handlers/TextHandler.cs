@@ -23,7 +23,7 @@ namespace Ornament.WebSockets.Handlers
                     Buffer.AddRange(content);
 
                     content = Buffer.ToArray();
-                    this.Buffer.Clear();
+                    Buffer.Clear();
                 }
 
                 var message = Encoding.UTF8.GetString(content, 0, receiveResult.Count);

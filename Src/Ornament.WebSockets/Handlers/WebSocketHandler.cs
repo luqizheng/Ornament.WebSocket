@@ -26,21 +26,31 @@ namespace Ornament.WebSockets.Handlers
 
         internal async Task Attach(HttpContext http, WebSocket socket)
         {
-            var oWebSocket = WebSocketManager.AddNewSocket(socket);
+            var oWebSocket = WebSocketManager.AddNewSocket(socket,http);
 
             OnConnecting?.Invoke(oWebSocket, http, WebSocketManager);
-
-            while (socket.State == WebSocketState.Open)
+            try
             {
-                var buffer = new ArraySegment<byte>(new byte[BuffSize]);
-                var socketReceiveResult = await socket.ReceiveAsync(buffer, CancellationToken.None);
-                if (socketReceiveResult.MessageType == WebSocketMessageType.Close)
-                    break;
+                while (socket.State == WebSocketState.Open)
+                {
+                    var buffer = new ArraySegment<byte>(new byte[BuffSize]);
+                    var socketReceiveResult = await socket.ReceiveAsync(buffer, CancellationToken.None);
+                    if (socketReceiveResult.MessageType == WebSocketMessageType.Close)
+                        break;
 
-                OnReceivedData(oWebSocket, http, buffer.ToArray(), socketReceiveResult, WebSocketManager);
+                    OnReceivedData(oWebSocket, http, buffer.ToArray(), socketReceiveResult, WebSocketManager);
+                }
             }
-            WebSocketManager.Remove(oWebSocket.Id);
-            OnClosed?.Invoke(oWebSocket, http, WebSocketManager);
+            catch (Exception ex)
+            {
+                await socket.CloseAsync(WebSocketCloseStatus.InternalServerError, ex.Message, CancellationToken.None);
+                throw;
+            }
+            finally
+            {
+                WebSocketManager.Remove(oWebSocket.Id);
+                OnClosed?.Invoke(oWebSocket, http, WebSocketManager);
+            }
         }
 
 

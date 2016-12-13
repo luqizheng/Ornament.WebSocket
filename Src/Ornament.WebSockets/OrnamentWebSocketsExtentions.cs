@@ -25,8 +25,8 @@ namespace Ornament.WebSockets
 
             return services;
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="services"></param>
@@ -41,22 +41,28 @@ namespace Ornament.WebSockets
             services.AddTransient(typeof(T));
             return services;
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="app"></param>
         /// <param name="webSocketSetting"></param>
         /// <returns></returns>
         public static IApplicationBuilder UseOrnamentWebSocket(this IApplicationBuilder app,
-            Action<WebSocketHandlerBuilder> webSocketSetting)
+            Action<WebSocketHandlerBuilder> webSocketSetting, WebSocketOptions options = null)
         {
             if (webSocketSetting == null)
                 throw new ArgumentNullException(nameof(webSocketSetting));
-            app.UseWebSockets()
-            .Use(async (http, next) =>
+
+            if (options == null)
+                app.UseWebSockets();
+            else
+                app.UseWebSockets(options);
+
+            app.Use(async (http, next) =>
             {
                 if (http.WebSockets.IsWebSocketRequest)
                 {
+                    var c = http.WebSockets.WebSocketRequestedProtocols;
                     var manager = app.ApplicationServices.GetService<WebSocketHandlerManager>();
                     if (manager.ContainsHandler(http.Request.Path))
                     {
@@ -68,7 +74,6 @@ namespace Ornament.WebSockets
                     {
                         throw new OranmentWebSocketException($"Cannot find WebSocketHandler for " + http.Request.Path);
                     }
-
                 }
                 else
                 {
