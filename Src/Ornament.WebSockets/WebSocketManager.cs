@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.WebSockets;
 using Microsoft.AspNetCore.Http;
-using Ornament.WebSockets.WebSocketProtocols;
 
 namespace Ornament.WebSockets
 {

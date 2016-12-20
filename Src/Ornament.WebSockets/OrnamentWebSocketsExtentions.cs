@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Ornament.WebSockets.Handlers;
-using Ornament.WebSockets.WebSocketProtocols;
+using Ornament.WebSockets.Serializer;
 
 namespace Ornament.WebSockets
 {
@@ -26,21 +26,21 @@ namespace Ornament.WebSockets
             return services;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddWebSockeProtocol<T>(this IServiceCollection services)
-            where T : IWebSocketProtocol
+        ///// <summary>
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="services"></param>
+        ///// <returns></returns>
+        //public static IServiceCollection AddWebSockeProtocol<T>(this IServiceCollection services)
+        //    where T : IWebSocketSerializer
 
-        {
-            if (services == null)
-                throw new ArgumentNullException(nameof(services));
+        //{
+        //    if (services == null)
+        //        throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient(typeof(T));
-            return services;
-        }
+        //    services.AddTransient(typeof(T));
+        //    return services;
+        //}
 
         /// <summary>
         /// </summary>
