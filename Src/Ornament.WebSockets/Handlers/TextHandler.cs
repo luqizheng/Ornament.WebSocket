@@ -10,11 +10,16 @@ namespace Ornament.WebSockets.Handlers
     public class TextHandler : WebSocketHandler
     {
         public List<byte> Buffer = new List<byte>();
-        public Action<OrnamentWebSocket, HttpContext, string, WebSocketManager> OnReceived;
+        public Action<OrnamentWebSocket, HttpContext, string, WebSocketHandler> OnReceived;
+
+        public TextHandler(int buffSize = 4096) : base(buffSize)
+        {
+        }
+
         public bool CallByCompleteMessage { get; set; } = true;
 
         protected override void OnReceivedData(OrnamentWebSocket oWebSocket, HttpContext http,
-            byte[] content, WebSocketReceiveResult receiveResult, WebSocketManager manager)
+            byte[] content, WebSocketReceiveResult receiveResult, WebSocketHandler manager)
         {
             if (receiveResult.EndOfMessage)
             {

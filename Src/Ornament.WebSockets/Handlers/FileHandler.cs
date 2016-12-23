@@ -18,13 +18,13 @@ namespace Ornament.WebSockets.Handlers
                 Directory.CreateDirectory(folder);
         }
 
-        public Action<OrnamentWebSocket, HttpContext, WebSocketManager, FileInfo> OnReceived { get; set; }
+        public Action<OrnamentWebSocket, HttpContext, WebSocketHandler, FileInfo> OnReceived { get; set; }
 
         protected override void OnReceivedData(OrnamentWebSocket oWebSocket, HttpContext http, byte[] bytes,
             WebSocketReceiveResult receiveResult,
-            WebSocketManager manager)
+            WebSocketHandler handler)
         {
-            var file = Path.Combine(_folder, _currentPath ?? (_currentPath = Guid.NewGuid().ToString("N")));
+            var file = System.IO.Path.Combine(_folder, _currentPath ?? (_currentPath = Guid.NewGuid().ToString("N")));
             using (var writer = File.Open(file + ".uploading", FileMode.Append))
             {
                 writer.Write(bytes, 0, receiveResult.Count);
@@ -32,7 +32,7 @@ namespace Ornament.WebSockets.Handlers
             if (receiveResult.EndOfMessage)
             {
                 File.Move(file + ".uploading", file + ".tmp");
-                OnReceived?.Invoke(oWebSocket, http, manager, new FileInfo(file + ".tmp"));
+                OnReceived?.Invoke(oWebSocket, http, handler, new FileInfo(file + ".tmp"));
             }
         }
     }

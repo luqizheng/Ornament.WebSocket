@@ -1,59 +1,60 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net.WebSockets;
-using Microsoft.AspNetCore.Http;
+using Ornament.WebSockets.Handlers;
 
 namespace Ornament.WebSockets
 {
     public class WebSocketManager
     {
-        /// <summary>
-        /// Key is id, values is ornamentWEbSockets
-        /// </summary>
-        private readonly ConcurrentDictionary<string, OrnamentWebSocket> _pools =
-            new ConcurrentDictionary<string, OrnamentWebSocket>();
+        private readonly Dictionary<string, WebSocketHandler> _pathHandlersMappings =
+            new Dictionary<string, WebSocketHandler>();
 
-
-        internal OrnamentWebSocket AddNewSocket(WebSocket socket,HttpContext http)
+        public void RegistHanler(string path, WebSocketHandler handler)
         {
-            var result = new OrnamentWebSocket(socket);
-           
-
-            _pools.TryAdd(result.Id, result);
-            return result;
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler));
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+            handler.WebSocketManager = this;
+            handler.Path = path;
+            lock (_pathHandlersMappings)
+            {
+                _pathHandlersMappings.Add(path.ToUpper(), handler);
+            }
         }
 
-
-        public IEnumerable<OrnamentWebSocket> GetClients()
+        public WebSocketHandler GetHandler(string path)
         {
-            return _pools.Values;
+            return _pathHandlersMappings[path.ToUpper()];
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException">id 不能为空</exception>
-        public OrnamentWebSocket Get(string id)
+        public bool ContainsHandler(string path)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
-            if (_pools.ContainsKey(id))
-                return _pools[id];
-            throw new ArgumentOutOfRangeException(nameof(id));
+            return _pathHandlersMappings.ContainsKey(path.ToUpper());
         }
 
-
-        internal void Remove(string id)
+        public OrnamentWebSocket GetWebSocket(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
-            OrnamentWebSocket closingOrnamentWebOrnamentWebSocket;
-            _pools.TryRemove(id, out closingOrnamentWebOrnamentWebSocket);
+            foreach (var handler in _pathHandlersMappings.Values)
+            {
+                OrnamentWebSocket webSocket;
+                if (handler.TryGetWebSocket(id, out webSocket))
+                    return webSocket;
+            }
+            throw new OranmentWebSocketException("Can not found id=" + id + " websocket");
         }
 
-        public int CountClients()
+        public OrnamentWebSocket GetWebSocket(string id, string path)
         {
-            return _pools.Count;
+            WebSocketHandler handler;
+
+            if (_pathHandlersMappings.TryGetValue(path, out handler))
+            {
+                OrnamentWebSocket webSocket;
+                if (handler.TryGetWebSocket(id, out webSocket))
+                    return webSocket;
+            }
+            throw new OranmentWebSocketException("Can not found id=" + id + " websocket");
         }
     }
 }

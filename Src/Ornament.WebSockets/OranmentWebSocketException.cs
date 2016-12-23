@@ -6,7 +6,6 @@ namespace Ornament.WebSockets
     {
         public OranmentWebSocketException(string message) : base(message)
         {
-
         }
     }
 }

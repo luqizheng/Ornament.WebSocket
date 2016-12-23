@@ -8,36 +8,33 @@ namespace Ornament.WebSockets.Handlers
     public abstract class BinaryHandler : WebSocketHandler
     {
         private readonly List<byte> _buffer;
-        private readonly int _maxBuffer;
 
 
-        protected BinaryHandler(int maxBuffer)
+        protected BinaryHandler(int maxBuffer) : base(maxBuffer)
         {
-            _maxBuffer = maxBuffer;
-
-            _buffer = new List<byte>(_maxBuffer);
+            _buffer = new List<byte>(maxBuffer);
         }
 
-        protected abstract void ReceiveCompleteData(OrnamentWebSocket socket, HttpContext http, WebSocketManager manager,
+        protected abstract void ReceiveCompleteData(OrnamentWebSocket socket, HttpContext http, WebSocketHandler manager,
             byte[] content);
 
 
         protected override void OnReceivedData(OrnamentWebSocket oWebSocket, HttpContext http, byte[] content,
             WebSocketReceiveResult receiveResult,
-            WebSocketManager manager)
+            WebSocketHandler handler)
         {
             if (receiveResult.EndOfMessage)
             {
                 if (_buffer.Any())
                 {
-                    if (_buffer.Count + content.Length > _maxBuffer)
-                        throw new BufferOverflowException(_maxBuffer);
+                    if (_buffer.Count + content.Length > BuffSize)
+                        throw new BufferOverflowException(BuffSize);
                     _buffer.AddRange(content);
 
                     content = _buffer.ToArray();
                     _buffer.Clear();
                 }
-                ReceiveCompleteData(oWebSocket, http, manager, content);
+                ReceiveCompleteData(oWebSocket, http, handler, content);
             }
             else
             {

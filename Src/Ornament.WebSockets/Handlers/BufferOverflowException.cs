@@ -7,7 +7,6 @@ namespace Ornament.WebSockets.Handlers
         public BufferOverflowException(int maxLength)
             : base($"acutla length geater than" + maxLength)
         {
-
         }
     }
 }

@@ -10,7 +10,7 @@ namespace UnitTest
         [Fact]
         public void TestRegist()
         {
-            WebSocketHandlerManager manager = new WebSocketHandlerManager(new WebSocketManager());
+            WebSocketManager manager = new WebSocketManager();
 
             var exprect = new TextHandler();
             manager.RegistHanler("test", exprect);

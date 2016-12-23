@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Ornament.WebSockets.Handlers;
 
 namespace Ornament.WebSockets
 {
@@ -11,16 +12,21 @@ namespace Ornament.WebSockets
         private readonly int _bufferLenght;
         private readonly WebSocket _socket;
 
-
-        public OrnamentWebSocket(WebSocket socket, int bufferLength = 4096)
+        public OrnamentWebSocket(WebSocket socket, WebSocketHandler handler, int bufferLength = 4096)
         {
             if (socket == null)
                 throw new ArgumentNullException(nameof(socket));
-
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler));
+            WebSocketHandler = handler;
             _socket = socket;
             Id = Guid.NewGuid().ToString("N");
             _bufferLenght = bufferLength;
         }
+
+        internal string Group { get; set; }
+
+        public WebSocketHandler WebSocketHandler { get; set; }
 
 
         public string Id { get; }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ornament.WebSockets
 {
-    public static class SocketExtentions
+    public static class OrnamentSocketSendHelper
     {
         public static Task[] Send(this IEnumerable<OrnamentWebSocket> sockets,
             byte[] bytes, int

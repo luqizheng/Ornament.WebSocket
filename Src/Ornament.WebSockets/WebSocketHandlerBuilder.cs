@@ -9,18 +9,15 @@ namespace Ornament.WebSockets
     /// </summary>
     public class WebSocketHandlerBuilder
     {
-        private readonly WebSocketHandlerManager _manager;
+        private readonly WebSocketManager _manager;
 
 
-        internal WebSocketHandlerBuilder(WebSocketHandlerManager manager)
+        internal WebSocketHandlerBuilder(WebSocketManager manager)
         {
-#if DEBUG
-
             if (manager == null) throw new ArgumentNullException(nameof(manager));
-#endif
-
             _manager = manager;
         }
+
 
         public TextHandler AddText(string path)
         {
