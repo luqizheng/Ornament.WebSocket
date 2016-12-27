@@ -8,6 +8,7 @@
     "NETStandard.Library": "1.6.1",
     "System.Net.WebSockets": "4.3.0"
   },
+  
   "packOptions": {
     "repository": {
       "url": "https://github.com/luqizheng/Ornament.WebSocket"
