@@ -11,6 +11,7 @@ namespace Ornament.WebSockets
     {
         private readonly int _bufferLenght;
         private readonly WebSocket _socket;
+        private string _group;
 
         public OrnamentWebSocket(WebSocket socket, WebSocketHandler handler, int bufferLength = 4096)
         {
@@ -24,7 +25,21 @@ namespace Ornament.WebSockets
             _bufferLenght = bufferLength;
         }
 
-        internal string Group { get; set; }
+        internal string Group
+        {
+            get
+            {
+                return _group;
+            }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+                if (_group != value)
+                    throw new ArgumentException("value", "WebSocket  was belong to another group. can't be changed.");
+                _group = value;
+            }
+        }
 
         public WebSocketHandler WebSocketHandler { get; set; }
 
@@ -67,12 +82,12 @@ namespace Ornament.WebSockets
         public static void RunPart(int eachPartLength, int totalLength,
             Action<int, int, bool> action)
         {
-            var length = Convert.ToInt32(totalLength/eachPartLength);
+            var length = Convert.ToInt32(totalLength / eachPartLength);
             var start = 0;
-            var remind = totalLength%eachPartLength;
+            var remind = totalLength % eachPartLength;
             for (var i = 0; i < length; i++)
             {
-                start = i*eachPartLength;
+                start = i * eachPartLength;
                 var isEnd = (remind == 0) && (i == length - 1);
                 action(start, eachPartLength, isEnd);
             }

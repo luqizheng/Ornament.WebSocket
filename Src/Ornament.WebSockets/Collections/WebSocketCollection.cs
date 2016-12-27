@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Ornament.WebSockets.Collections
 {
+   
     public class WebSocketCollection<T>
     {
         /// <summary>
