@@ -35,7 +35,7 @@ namespace Ornament.WebSockets
             {
                 if (value == null)
                     throw new ArgumentNullException("value");
-                if (_group != value)
+                if (_group == value)
                     throw new ArgumentException("value", "WebSocket  was belong to another group. can't be changed.");
                 _group = value;
             }
