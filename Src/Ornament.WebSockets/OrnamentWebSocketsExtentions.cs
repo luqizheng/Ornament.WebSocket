@@ -17,10 +17,7 @@ namespace Ornament.WebSockets
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
 
-            services
-                .AddSingleton<WebSocketManager>();
-
-
+            services.AddSingleton<WebSocketManager>();
             return services;
         }
 
@@ -29,18 +26,13 @@ namespace Ornament.WebSockets
         /// </summary>
         /// <param name="app"></param>
         /// <param name="webSocketSetting"></param>
-        /// <param name="options"></param>
         /// <returns></returns>
         public static IApplicationBuilder UseOrnamentWebSocket(this IApplicationBuilder app,
-            Action<WebSocketHandlerBuilder> webSocketSetting, WebSocketOptions options = null)
+            Action<WebSocketHandlerBuilder> webSocketSetting)
         {
             if (webSocketSetting == null)
                 throw new ArgumentNullException(nameof(webSocketSetting));
 
-            if (options == null)
-                app.UseWebSockets();
-            else
-                app.UseWebSockets(options);
 
             app.Use(async (http, next) =>
             {
