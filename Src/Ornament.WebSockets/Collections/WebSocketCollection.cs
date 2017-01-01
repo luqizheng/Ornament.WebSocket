@@ -4,11 +4,18 @@ using System.Collections.Generic;
 
 namespace Ornament.WebSockets.Collections
 {
-   
-    public class WebSocketCollection<T>
+    public class WebSocketCollection : WebSocketCollection<string>
+    {
+        protected override string GetKey(OrnamentWebSocket webSocket)
+        {
+            return webSocket.Id;
+        }
+    }
+
+    public abstract class WebSocketCollection<T>
     {
         /// <summary>
-        ///     Key is id, values is ornamentWEbSockets
+        ///     Key is key, values is ornamentWEbSockets
         /// </summary>
         private readonly ConcurrentDictionary<T, OrnamentWebSocket> _pools =
             new ConcurrentDictionary<T, OrnamentWebSocket>();
@@ -19,33 +26,42 @@ namespace Ornament.WebSockets.Collections
             return _pools.Values;
         }
 
-        public void Add(T id, OrnamentWebSocket webSocket)
+        protected abstract T GetKey(OrnamentWebSocket webSocket);
+
+
+        public virtual void Add(OrnamentWebSocket webSocket)
         {
+            var id = GetKey(webSocket);
             _pools.TryAdd(id, webSocket);
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="id">socketId</param>
+        /// <param name="key">socketId</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException">id 不能为空</exception>
-        public OrnamentWebSocket Get(T id)
+        /// <exception cref="ArgumentOutOfRangeException">key 不能为空</exception>
+        public virtual OrnamentWebSocket Get(T key)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
-            if (_pools.ContainsKey(id))
-                return _pools[id];
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (_pools.ContainsKey(key))
+                return _pools[key];
             return null;
         }
 
 
-        public void Remove(T id)
+        public virtual void Remove(T id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             OrnamentWebSocket closingOrnamentWebOrnamentWebSocket;
             _pools.TryRemove(id, out closingOrnamentWebOrnamentWebSocket);
         }
 
-        public int CountClients()
+        public virtual bool IsEmpty()
+        {
+            return _pools.Count != 0;
+        }
+
+        public virtual int CountClients()
         {
             return _pools.Count;
         }

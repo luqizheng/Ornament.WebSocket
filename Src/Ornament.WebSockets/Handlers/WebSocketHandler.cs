@@ -11,12 +11,16 @@ namespace Ornament.WebSockets.Handlers
 {
     public abstract class WebSocketHandler
     {
-        private readonly WebSocketCollection<string> _webSockets = new WebSocketCollection<string>();
+        private readonly WebSocketCollection _webSockets = new WebSocketCollection();
+
+        private WebSocketGroupColllection _groups;
         public Action<OrnamentWebSocket, HttpContext, WebSocketHandler> OnClosed;
         public Action<OrnamentWebSocket, HttpContext, WebSocketHandler> OnConnecting;
 
         protected WebSocketHandler(int buffSize = 4096)
         {
+            if (buffSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(buffSize), "bufferSize should be geater than 0.");
             BuffSize = buffSize;
         }
 
@@ -25,10 +29,12 @@ namespace Ornament.WebSockets.Handlers
         public int BuffSize { get; }
         public WebSocketManager WebSocketManager { get; internal set; }
 
+        public WebSocketGroupColllection Groups => _groups ?? (_groups = new WebSocketGroupColllection());
+
         private OrnamentWebSocket Add(WebSocket socket)
         {
             var result = new OrnamentWebSocket(socket, this);
-            _webSockets.Add(result.Id, result);
+            _webSockets.Add(result);
             return result;
         }
 

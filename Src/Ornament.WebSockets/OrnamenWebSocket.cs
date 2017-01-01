@@ -25,18 +25,13 @@ namespace Ornament.WebSockets
             _bufferLenght = bufferLength;
         }
 
-        internal string Group
+        public string Group
         {
-            get
+            get { return _group; }
+            internal set
             {
-                return _group;
-            }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException("value");
                 if (_group == value)
-                    throw new ArgumentException("value", "WebSocket  was belong to another group. can't be changed.");
+                    throw new ArgumentException("value", "WebSocket was belong to another group. can't be changed.");
                 _group = value;
             }
         }

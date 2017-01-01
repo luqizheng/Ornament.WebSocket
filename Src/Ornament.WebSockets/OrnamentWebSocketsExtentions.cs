@@ -7,7 +7,7 @@ namespace Ornament.WebSockets
     public static class OrnamentWebSocketsExtentions
     {
         /// <summary>
-        ///     Add OrnamentWebSocket
+        ///     AddIn OrnamentWebSocket
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
@@ -47,7 +47,7 @@ namespace Ornament.WebSockets
                     }
                     else
                     {
-                        throw new OranmentWebSocketException($"Cannot find WebSocketHandler for " + http.Request.Path);
+                        throw new OrnamentWebSocketException($"Cannot find WebSocketHandler for " + http.Request.Path);
                     }
                 }
                 else

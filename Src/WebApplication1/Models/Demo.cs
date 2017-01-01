@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using Ornament.WebSockets;
 
@@ -11,6 +13,7 @@ namespace WebApplication1.Models
             var handler = setting.AddText("/repeat");
             handler.OnConnecting = (websocket, http, socketHandler) =>
             {
+                socketHandler.Groups.
                 websocket.SendTextAsnyc("logon,online users is:" + socketHandler.CountClients());
                 websocket.SendTextAsnyc("Your Id is :" + websocket.Id + " protocol :" + websocket.SubProtocol);
             };

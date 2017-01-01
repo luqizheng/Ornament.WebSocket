@@ -13,7 +13,6 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddOrnamentWebSocket();
 }
-        
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
 {
     app.UseWebSockets();

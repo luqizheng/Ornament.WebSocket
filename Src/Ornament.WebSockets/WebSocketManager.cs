@@ -41,7 +41,7 @@ namespace Ornament.WebSockets
                 if (handler.TryGetWebSocket(id, out webSocket))
                     return webSocket;
             }
-            throw new OranmentWebSocketException("Can not found id=" + id + " websocket");
+            throw new OrnamentWebSocketException("Can not found id=" + id + " websocket");
         }
 
         public OrnamentWebSocket GetWebSocket(string id, string path)
@@ -54,7 +54,7 @@ namespace Ornament.WebSockets
                 if (handler.TryGetWebSocket(id, out webSocket))
                     return webSocket;
             }
-            throw new OranmentWebSocketException("Can not found id=" + id + " websocket");
+            throw new OrnamentWebSocketException("Can not found id=" + id + " websocket");
         }
     }
 }
