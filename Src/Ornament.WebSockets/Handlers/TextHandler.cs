@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -9,7 +8,6 @@ namespace Ornament.WebSockets.Handlers
 {
     public class TextHandler : WebSocketHandler
     {
-        public List<byte> Buffer = new List<byte>();
         public Action<OrnamentWebSocket, HttpContext, string, WebSocketHandler> OnReceived;
 
         public TextHandler(int buffSize = 4096) : base(buffSize)
@@ -23,12 +21,12 @@ namespace Ornament.WebSockets.Handlers
         {
             if (receiveResult.EndOfMessage)
             {
-                if (CallByCompleteMessage && Buffer.Any())
+                if (CallByCompleteMessage && oWebSocket.Buffer.Any())
                 {
-                    Buffer.AddRange(content);
+                    oWebSocket.Buffer.AddRange(content);
 
-                    content = Buffer.ToArray();
-                    Buffer.Clear();
+                    content = oWebSocket.Buffer.ToArray();
+                    oWebSocket.Buffer.Clear();
                 }
 
                 var message = Encoding.UTF8.GetString(content, 0, receiveResult.Count);
@@ -36,7 +34,7 @@ namespace Ornament.WebSockets.Handlers
             }
             else
             {
-                Buffer.AddRange(content);
+                oWebSocket.Buffer.AddRange(content);
             }
         }
     }

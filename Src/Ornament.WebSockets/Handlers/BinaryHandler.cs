@@ -5,40 +5,59 @@ using Microsoft.AspNetCore.Http;
 
 namespace Ornament.WebSockets.Handlers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class BinaryHandler : WebSocketHandler
     {
-        private readonly List<byte> _buffer;
+      
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maxBuffer"></param>
         protected BinaryHandler(int maxBuffer) : base(maxBuffer)
         {
-            _buffer = new List<byte>(maxBuffer);
+         
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="socket"></param>
+        /// <param name="http"></param>
+        /// <param name="manager"></param>
+        /// <param name="content"></param>
         protected abstract void ReceiveCompleteData(OrnamentWebSocket socket, HttpContext http, WebSocketHandler manager,
             byte[] content);
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oWebSocket"></param>
+        /// <param name="http"></param>
+        /// <param name="content"></param>
+        /// <param name="receiveResult"></param>
+        /// <param name="handler"></param>
         protected override void OnReceivedData(OrnamentWebSocket oWebSocket, HttpContext http, byte[] content,
             WebSocketReceiveResult receiveResult,
             WebSocketHandler handler)
         {
             if (receiveResult.EndOfMessage)
             {
-                if (_buffer.Any())
+                if (oWebSocket.Buffer.Any())
                 {
-                    if (_buffer.Count + content.Length > BuffSize)
+                    if (oWebSocket.Buffer.Count + content.Length > BuffSize)
                         throw new BufferOverflowException(BuffSize);
-                    _buffer.AddRange(content);
+                    oWebSocket.Buffer.AddRange(content);
 
-                    content = _buffer.ToArray();
-                    _buffer.Clear();
+                    content = oWebSocket.Buffer.ToArray();
+                    oWebSocket.Buffer.Clear();
                 }
                 ReceiveCompleteData(oWebSocket, http, handler, content);
             }
             else
             {
-                _buffer.AddRange(content);
+                oWebSocket.Buffer.AddRange(content);
             }
         }
     }

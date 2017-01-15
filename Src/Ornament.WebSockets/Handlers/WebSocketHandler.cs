@@ -51,7 +51,7 @@ namespace Ornament.WebSockets.Handlers
                     var socketReceiveResult = await socket.ReceiveAsync(buffer, CancellationToken.None);
                     if (socketReceiveResult.MessageType == WebSocketMessageType.Close)
                         break;
-
+                  
                     OnReceivedData(oWebSocket, http, buffer.ToArray(), socketReceiveResult, this);
                 }
             }
@@ -63,7 +63,7 @@ namespace Ornament.WebSockets.Handlers
             finally
             {
                 _webSockets.Remove(oWebSocket.Id);
-                OnClosed?.Invoke(oWebSocket, http, this);
+                OnClosing(oWebSocket, http);
             }
         }
 
@@ -85,6 +85,11 @@ namespace Ornament.WebSockets.Handlers
         {
             weboSocket = _webSockets.Get(id);
             return weboSocket != null;
+        }
+
+        protected virtual void OnClosing(OrnamentWebSocket oWebSocket, HttpContext http)
+        {
+            OnClosed?.Invoke(oWebSocket, http, this);
         }
     }
 }

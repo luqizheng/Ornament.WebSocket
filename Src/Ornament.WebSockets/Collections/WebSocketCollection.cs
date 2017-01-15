@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Ornament.WebSockets.Collections
 {
+    /// <summary>
+    /// WebSocket collection, Map is string ,Value is OrnamentWebScoket
+    /// </summary>
     public class WebSocketCollection : WebSocketCollection<string>
     {
         protected override string GetKey(OrnamentWebSocket webSocket)

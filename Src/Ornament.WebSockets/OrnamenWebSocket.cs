@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -12,7 +13,7 @@ namespace Ornament.WebSockets
         private readonly int _bufferLenght;
         private readonly WebSocket _socket;
         private string _group;
-
+        internal List<byte> Buffer = new List<byte>();
         public OrnamentWebSocket(WebSocket socket, WebSocketHandler handler, int bufferLength = 4096)
         {
             if (socket == null)
@@ -77,12 +78,12 @@ namespace Ornament.WebSockets
         public static void RunPart(int eachPartLength, int totalLength,
             Action<int, int, bool> action)
         {
-            var length = Convert.ToInt32(totalLength / eachPartLength);
+            var length = Convert.ToInt32(totalLength/eachPartLength);
             var start = 0;
-            var remind = totalLength % eachPartLength;
+            var remind = totalLength%eachPartLength;
             for (var i = 0; i < length; i++)
             {
-                start = i * eachPartLength;
+                start = i*eachPartLength;
                 var isEnd = (remind == 0) && (i == length - 1);
                 action(start, eachPartLength, isEnd);
             }
