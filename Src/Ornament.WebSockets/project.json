@@ -7,13 +7,13 @@
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.0",
     "NETStandard.Library": "1.6.1"
   },
-  
+
   "packOptions": {
     "repository": {
       "url": "https://github.com/luqizheng/Ornament.WebSocket"
     },
     "projectUrl": "https://github.com/luqizheng/Ornament.WebSocket",
-    "tags": ["WebSocket", "DotnetCore", "Ornament"],
+    "tags": ["WebSocket", "DotnetCore", "Ornament", ".net core"],
     "summary": "Wrap webosocket of Dotnet core and let it easy to use."
   },
 

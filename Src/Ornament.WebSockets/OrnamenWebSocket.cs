@@ -8,12 +8,22 @@ using Ornament.WebSockets.Handlers;
 
 namespace Ornament.WebSockets
 {
+    /// <summary>
+    /// Websocket of wrapper
+    /// </summary>
     public class OrnamentWebSocket
     {
         private readonly int _bufferLenght;
         private readonly WebSocket _socket;
         private string _group;
         internal List<byte> Buffer = new List<byte>();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="socket"></param>
+        /// <param name="handler"></param>
+        /// <param name="bufferLength"></param>
+        /// <exception cref="ArgumentNullException">socket or handler is null</exception>
         public OrnamentWebSocket(WebSocket socket, WebSocketHandler handler, int bufferLength = 4096)
         {
             if (socket == null)
@@ -25,38 +35,64 @@ namespace Ornament.WebSockets
             Id = Guid.NewGuid().ToString("N");
             _bufferLenght = bufferLength;
         }
-
+        /// <summary>
+        /// Gets the Group Name 
+        /// </summary>
         public string Group
         {
             get { return _group; }
             internal set
             {
                 if (_group == value)
-                    throw new ArgumentException("value", "WebSocket was belong to another group. can't be changed.");
+                    throw new ArgumentException("value", $"WebSocket was belong to another group. can't be changed.");
                 _group = value;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public WebSocketHandler WebSocketHandler { get; internal set; }
 
-        public WebSocketHandler WebSocketHandler { get; set; }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Id { get; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsOpen => _socket.State == WebSocketState.Open;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string SubProtocol => _socket.SubProtocol;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sendContent"></param>
+        /// <returns></returns>
         public Task SendTextAsnyc(string sendContent)
         {
             return SendTextAsnyc(sendContent, CancellationToken.None);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sendContent"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task SendTextAsnyc(string sendContent, CancellationToken cancellationToken)
         {
             var bytes = Encoding.UTF8.GetBytes(sendContent);
             return SendAsnyc(bytes, _bufferLenght, WebSocketMessageType.Text, cancellationToken);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <param name="maxLength"></param>
+        /// <param name="messageType"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task SendAsnyc(byte[] bytes, int maxLength, WebSocketMessageType messageType,
             CancellationToken cancellationToken)
         {
@@ -74,7 +110,12 @@ namespace Ornament.WebSockets
                 });
             }, cancellationToken);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="eachPartLength"></param>
+        /// <param name="totalLength"></param>
+        /// <param name="action"></param>
         public static void RunPart(int eachPartLength, int totalLength,
             Action<int, int, bool> action)
         {

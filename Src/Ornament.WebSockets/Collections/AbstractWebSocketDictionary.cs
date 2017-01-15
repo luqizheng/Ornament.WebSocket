@@ -11,7 +11,6 @@ namespace Ornament.WebSockets.Collections
             new ConcurrentDictionary<TKey, WebSocketCollection>();
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="webSocket"></param>
         /// <param name="groupKey"></param>
@@ -24,8 +23,8 @@ namespace Ornament.WebSockets.Collections
 
             list.Add(webSocket);
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="socket"></param>
         /// <param name="groupKey"></param>
@@ -36,8 +35,8 @@ namespace Ornament.WebSockets.Collections
             if (_groupSocketIdMapping.TryGetValue(groupKey, out group))
                 group.Remove(socket.Id);
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="groupKey"></param>
         /// <param name="sockets"></param>

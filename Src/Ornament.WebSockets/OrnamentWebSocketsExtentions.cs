@@ -21,14 +21,20 @@ namespace Ornament.WebSockets
             return services;
         }
 
+        public static IApplicationBuilder UseOrnamentWebSocket(this IApplicationBuilder app,
+            Action<WebSocketHandlerBuilder> webSocketSetting)
+        {
+            return UseOrnamentWebSocket(app, new WebSocketOptions(), webSocketSetting);
+        }
 
         /// <summary>
         /// </summary>
         /// <param name="app"></param>
+        /// <param name="options"></param>
         /// <param name="webSocketSetting"></param>
         /// <returns></returns>
         public static IApplicationBuilder UseOrnamentWebSocket(this IApplicationBuilder app,
-            Action<WebSocketHandlerBuilder> webSocketSetting)
+            WebSocketOptions options, Action<WebSocketHandlerBuilder> webSocketSetting)
         {
             if (webSocketSetting == null)
                 throw new ArgumentNullException(nameof(webSocketSetting));

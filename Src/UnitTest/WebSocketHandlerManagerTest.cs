@@ -1,6 +1,5 @@
 ﻿using Ornament.WebSockets;
 using Ornament.WebSockets.Handlers;
-using UnitTest.Helpers;
 using Xunit;
 
 namespace UnitTest
@@ -10,7 +9,7 @@ namespace UnitTest
         [Fact]
         public void TestRegist()
         {
-            WebSocketManager manager = new WebSocketManager();
+            var manager = new WebSocketManager();
 
             var exprect = new TextHandler();
             manager.RegistHanler("test", exprect);

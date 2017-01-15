@@ -8,7 +8,11 @@ namespace Ornament.WebSockets
     {
         private readonly Dictionary<string, WebSocketHandler> _pathHandlersMappings =
             new Dictionary<string, WebSocketHandler>();
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="handler"></param>
         public void RegistHanler(string path, WebSocketHandler handler)
         {
             if (handler == null)

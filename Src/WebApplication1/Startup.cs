@@ -1,11 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Ornament.WebSockets;
 using WebApplication1.Models;
@@ -24,8 +19,9 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+         
             app.UseWebSockets();
-            
+
             app.UseOrnamentWebSocket(setting =>
             {
                 //text send and reply,client code on quickStart.html;
@@ -41,10 +37,7 @@ namespace WebApplication1
 
 
             app.UseDefaultFiles();
-
             app.UseStaticFiles();
-
         }
-
     }
 }

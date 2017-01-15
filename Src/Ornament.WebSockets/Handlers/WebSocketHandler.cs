@@ -24,7 +24,9 @@ namespace Ornament.WebSockets.Handlers
             BuffSize = buffSize;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Path { get; internal set; }
         public int BuffSize { get; }
         public WebSocketManager WebSocketManager { get; internal set; }
@@ -51,7 +53,7 @@ namespace Ornament.WebSockets.Handlers
                     var socketReceiveResult = await socket.ReceiveAsync(buffer, CancellationToken.None);
                     if (socketReceiveResult.MessageType == WebSocketMessageType.Close)
                         break;
-                  
+
                     OnReceivedData(oWebSocket, http, buffer.ToArray(), socketReceiveResult, this);
                 }
             }

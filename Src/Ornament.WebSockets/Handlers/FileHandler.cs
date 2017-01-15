@@ -10,12 +10,20 @@ namespace Ornament.WebSockets.Handlers
         private readonly string _folder;
         private string _currentPath;
 
-        public FileHandler(string folder)
+        /// <summary>
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="bufferSize"></param>
+        /// <exception cref="DirectoryNotFoundException">folder not be found</exception>
+        /// <exception cref="ArgumentNullException">folder is empty</exception>
+        public FileHandler(string folder,int bufferSize=4096):base(bufferSize)
         {
-            if (folder == null) throw new ArgumentNullException(nameof(folder));
-            _folder = folder;
+            if (string.IsNullOrEmpty(folder)) throw new ArgumentNullException(nameof(folder));
+          
             if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
+                throw new DirectoryNotFoundException(folder + " not found");
+
+            _folder = folder;
         }
 
         public Action<OrnamentWebSocket, HttpContext, WebSocketHandler, FileInfo> OnReceived { get; set; }

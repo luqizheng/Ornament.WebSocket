@@ -1,27 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.WebSockets;
 using Microsoft.AspNetCore.Http;
 
 namespace Ornament.WebSockets.Handlers
 {
     /// <summary>
-    /// 
     /// </summary>
     public abstract class BinaryHandler : WebSocketHandler
     {
-      
-
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="maxBuffer"></param>
         protected BinaryHandler(int maxBuffer) : base(maxBuffer)
         {
-         
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="socket"></param>
         /// <param name="http"></param>
@@ -31,7 +25,6 @@ namespace Ornament.WebSockets.Handlers
             byte[] content);
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="oWebSocket"></param>
         /// <param name="http"></param>
