@@ -29,7 +29,7 @@ namespace Ornament.WebSockets.Handlers
         /// </summary>
         public string Path { get; internal set; }
         public int BuffSize { get; }
-        public WebSocketManager WebSocketManager { get; internal set; }
+        public OrnamentWebSocketManager OrnamentWebSocketManager { get; internal set; }
 
         public WebSocketGroupColllection Groups => _groups ?? (_groups = new WebSocketGroupColllection());
 

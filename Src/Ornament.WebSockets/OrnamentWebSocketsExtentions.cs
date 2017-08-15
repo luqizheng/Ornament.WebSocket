@@ -1,29 +1,26 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Ornament.WebSockets.Handlers;
 
 namespace Ornament.WebSockets
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class OrnamentWebSocketsExtentions
     {
+        
         /// <summary>
-        ///     AddIn OrnamentWebSocket
+        /// 
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="app"></param>
+        /// <param name="webSocketSetting"></param>
         /// <returns></returns>
-        public static IServiceCollection AddOrnamentWebSocket(this IServiceCollection services)
-
-        {
-            if (services == null)
-                throw new ArgumentNullException(nameof(services));
-
-            services.AddSingleton<WebSocketManager>();
-            return services;
-        }
-
         public static IApplicationBuilder UseOrnamentWebSocket(this IApplicationBuilder app,
             Action<WebSocketHandlerBuilder> webSocketSetting)
         {
+           
             return UseOrnamentWebSocket(app, new WebSocketOptions(), webSocketSetting);
         }
 
@@ -38,17 +35,17 @@ namespace Ornament.WebSockets
         {
             if (webSocketSetting == null)
                 throw new ArgumentNullException(nameof(webSocketSetting));
-
+            app.UseWebSockets();
 
             app.Use(async (http, next) =>
             {
                 if (http.WebSockets.IsWebSocketRequest)
                 {
-                    var manager = app.ApplicationServices.GetService<WebSocketManager>();
-                    if (manager.ContainsHandler(http.Request.Path))
+                  
+                    WebSocketHandler handler;
+                    if (OrnamentWebSocketManager.Instance.GetHandler(http.Request.Path,out handler))
                     {
                         var webSocket = await http.WebSockets.AcceptWebSocketAsync();
-                        var handler = manager.GetHandler(http.Request.Path);
                         await handler.Attach(http, webSocket);
                     }
                     else
@@ -61,8 +58,8 @@ namespace Ornament.WebSockets
                     await next();
                 }
             });
-            var socketManager = app.ApplicationServices.GetService<WebSocketManager>();
-            webSocketSetting(new WebSocketHandlerBuilder(socketManager));
+           
+            webSocketSetting(new WebSocketHandlerBuilder());
             return app;
         }
     }

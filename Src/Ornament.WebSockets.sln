@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Ornament.WebSockets", "Ornament.WebSockets\Ornament.WebSockets.xproj", "{9927DA89-87F7-4C1F-8F6E-275AF587B10B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ornament.WebSockets", "Ornament.WebSockets\Ornament.WebSockets.csproj", "{9927DA89-87F7-4C1F-8F6E-275AF587B10B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "UnitTest", "UnitTest\UnitTest.xproj", "{C6E77DF5-6EB5-4787-B243-74939049C299}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{60353222-C47A-46AD-87DB-0A97871BA744}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebApplication1", "WebApplication1\WebApplication1.xproj", "{60353222-C47A-46AD-87DB-0A97871BA744}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ornament.WebSockets.Json", "Ornament.WebSockets.Json\Ornament.WebSockets.Json.csproj", "{7C6852F0-5EBC-406E-9F75-DD0F831AE8D5}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Ornament.WebSockets.Json", "Ornament.WebSockets.Json\Ornament.WebSockets.Json.xproj", "{7C6852F0-5EBC-406E-9F75-DD0F831AE8D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestProject1", "XUnitTestProject1\XUnitTestProject1.csproj", "{47624062-9F11-4AE5-8AED-BACA95E869EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		{9927DA89-87F7-4C1F-8F6E-275AF587B10B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9927DA89-87F7-4C1F-8F6E-275AF587B10B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9927DA89-87F7-4C1F-8F6E-275AF587B10B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C6E77DF5-6EB5-4787-B243-74939049C299}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C6E77DF5-6EB5-4787-B243-74939049C299}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C6E77DF5-6EB5-4787-B243-74939049C299}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C6E77DF5-6EB5-4787-B243-74939049C299}.Release|Any CPU.Build.0 = Release|Any CPU
 		{60353222-C47A-46AD-87DB-0A97871BA744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{60353222-C47A-46AD-87DB-0A97871BA744}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60353222-C47A-46AD-87DB-0A97871BA744}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,8 +29,15 @@ Global
 		{7C6852F0-5EBC-406E-9F75-DD0F831AE8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C6852F0-5EBC-406E-9F75-DD0F831AE8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C6852F0-5EBC-406E-9F75-DD0F831AE8D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47624062-9F11-4AE5-8AED-BACA95E869EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47624062-9F11-4AE5-8AED-BACA95E869EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47624062-9F11-4AE5-8AED-BACA95E869EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47624062-9F11-4AE5-8AED-BACA95E869EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4BD432D4-AACA-4482-AEAB-6553AD74B4B4}
 	EndGlobalSection
 EndGlobal

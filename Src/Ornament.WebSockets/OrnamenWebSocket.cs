@@ -30,6 +30,7 @@ namespace Ornament.WebSockets
                 throw new ArgumentNullException(nameof(socket));
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler));
+
             WebSocketHandler = handler;
             _socket = socket;
             Id = Guid.NewGuid().ToString("N");
@@ -65,6 +66,8 @@ namespace Ornament.WebSockets
         /// 
         /// </summary>
         public string SubProtocol => _socket.SubProtocol;
+
+        public WebSocket Socket => _socket;
         /// <summary>
         /// 
         /// </summary>
@@ -111,7 +114,7 @@ namespace Ornament.WebSockets
             }, cancellationToken);
         }
         /// <summary>
-        /// 
+        /// 分布执行。
         /// </summary>
         /// <param name="eachPartLength"></param>
         /// <param name="totalLength"></param>
@@ -119,12 +122,12 @@ namespace Ornament.WebSockets
         public static void RunPart(int eachPartLength, int totalLength,
             Action<int, int, bool> action)
         {
-            var length = Convert.ToInt32(totalLength/eachPartLength);
+            var length = Convert.ToInt32(totalLength / eachPartLength);
             var start = 0;
-            var remind = totalLength%eachPartLength;
+            var remind = totalLength % eachPartLength;
             for (var i = 0; i < length; i++)
             {
-                start = i*eachPartLength;
+                start = i * eachPartLength;
                 var isEnd = (remind == 0) && (i == length - 1);
                 action(start, eachPartLength, isEnd);
             }

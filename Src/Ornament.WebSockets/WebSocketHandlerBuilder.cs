@@ -9,15 +9,15 @@ namespace Ornament.WebSockets
     /// </summary>
     public class WebSocketHandlerBuilder
     {
-        private readonly WebSocketManager _manager;
+        private readonly OrnamentWebSocketManager _manager;
 
         /// <summary>
         /// </summary>
         /// <param name="manager"></param>
-        internal WebSocketHandlerBuilder(WebSocketManager manager)
+        internal WebSocketHandlerBuilder()
         {
-            if (manager == null) throw new ArgumentNullException(nameof(manager));
-            _manager = manager;
+
+            _manager = OrnamentWebSocketManager.Instance;
         }
 
         public int BuffeSize { get; set; } = 4096;
@@ -39,17 +39,52 @@ namespace Ornament.WebSockets
         }
 
         /// <summary>
+        ///     纯文本交换数据
+        /// </summary>
+        /// <param name="matcher"></param>
+        /// <returns></returns>
+        public TextHandler AddText(Func<string, bool> matcher)
+        {
+            var result = new TextHandler(BuffeSize);
+
+            _manager.RegistHanler(matcher, result);
+            return result;
+        }
+
+        public T Add<T>(Func<string, bool> matcher, T handler)
+            where T : WebSocketHandler
+        {
+            _manager.RegistHanler(matcher, handler);
+            return handler;
+        }
+
+        public T Add<T>(string path, T handler)
+            where T : WebSocketHandler
+        {
+            _manager.RegistHanler(path, handler);
+            return handler;
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="path"></param>
         /// <param name="folder"></param>
         /// <returns></returns>
-        public FileHandler AddBinary(string path, string folder)
+        public FileHandler AddFileUploader(string path, string folder)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
             var uploadFileFolder = Path.Combine(Directory.GetCurrentDirectory(), folder);
             var result = new FileHandler(uploadFileFolder, BuffeSize);
             _manager.RegistHanler(path, result);
+            return result;
+        }
+
+        public FileHandler AddFileUploader(Func<string, bool> matcher, string folder)
+        {
+            var uploadFileFolder = Path.Combine(Directory.GetCurrentDirectory(), folder);
+            var result = new FileHandler(uploadFileFolder, BuffeSize);
+            _manager.RegistHanler(matcher, result);
             return result;
         }
     }

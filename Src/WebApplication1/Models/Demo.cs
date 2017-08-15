@@ -36,7 +36,7 @@ namespace WebApplication1.Models
 
         public static WebSocketHandlerBuilder FileUploadDemo(this WebSocketHandlerBuilder setting)
         {
-            var handler = setting.AddBinary("/uploadFile", "uploadfiles");
+            var handler = setting.AddFileUploader("/uploadFile", "uploadfiles");
 
             handler.OnConnecting = (websocket, http, manager) =>
             {
