@@ -13,7 +13,7 @@ namespace Demo.Web.Demos
 {
     public class TextDemoHandler : TextHandler
     {
-        protected TextDemoHandler(IOptions<WebSocketOptions> options) : base(options)
+        public TextDemoHandler(IOptions<WebSocketOptions> options) : base(options)
         {
         }
 

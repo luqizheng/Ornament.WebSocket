@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Ornament.WebSockets.Handlers;
 
 namespace Ornament.WebSockets
@@ -8,20 +9,20 @@ namespace Ornament.WebSockets
     /// </summary>
     public class OrnamentWebSocketManager
     {
-        
+
         private readonly Dictionary<Func<string, bool>, Type> _matcher
             = new Dictionary<Func<string, bool>, Type>();
-        
+
 
         private readonly Dictionary<string, Type> _pathHandlersMappings =
             new Dictionary<string, Type>();
+        private readonly IServiceCollection services;
 
-        public OrnamentWebSocketManager(IServiceProvider provider)
+        public OrnamentWebSocketManager(IServiceCollection services)
         {
-            Provider = provider;
-        }
 
-        private IServiceProvider Provider { get; }
+            this.services = services;
+        }
 
         /// <summary>
         /// </summary>
@@ -32,7 +33,7 @@ namespace Ornament.WebSockets
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
-
+            services.AddSingleton<T>();
             //handler.Path = path;
             lock (_pathHandlersMappings)
             {
@@ -46,6 +47,7 @@ namespace Ornament.WebSockets
             if (matcher == null)
                 throw new ArgumentNullException(nameof(matcher));
             //handler.Path = path;
+            services.AddSingleton<T>();
             _matcher.Add(matcher, typeof(T));
         }
 
@@ -53,16 +55,17 @@ namespace Ornament.WebSockets
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public bool GetHandler(string path, out IWebSocketHandler hanndler)
+        public bool GetHandler(IServiceProvider provider, string path, out IWebSocketHandler hanndler)
 
         {
+            
             if (path == null)
                 throw new ArgumentNullException(nameof(path));
             hanndler = null;
             var handlerType = GetHandlerType(path);
             if (handlerType != null)
-                hanndler = (IWebSocketHandler) Provider.GetService(handlerType);
-            return handlerType != null;
+                hanndler = (IWebSocketHandler)provider.GetService(handlerType);
+            return hanndler != null;
         }
 
         /// <summary>
@@ -110,7 +113,7 @@ namespace Ornament.WebSockets
         /// <param name="path"></param>
         /// <returns></returns>
         /// <exception cref="OrnamentWebSocketException"></exception>
-        public OrnamentWebSocket GetWebSocket(string id, string path)
+        public OrnamentWebSocket GetWebSocket(IServiceProvider provider, string id, string path)
         {
             if (id == null)
                 throw new ArgumentNullException(nameof(id));
@@ -120,7 +123,7 @@ namespace Ornament.WebSockets
 
             IWebSocketHandler handler;
 
-            if (GetHandler(path, out handler))
+            if (GetHandler(provider, path, out handler))
             {
                 OrnamentWebSocket webSocket;
                 if (handler.TryGetWebSocket(id, out webSocket))

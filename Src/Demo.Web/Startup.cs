@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +17,12 @@ namespace Demo.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOrnamentWebSocket();
+            services.AddOrnamentWebSocket(setting =>
+            {
+                setting.RegistHanler<Demos.TextDemoHandler>("/text");
+                setting.RegistHanler<Demos.UploadfileDemoHandler>("/uploadfile");
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -26,18 +32,22 @@ namespace Demo.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+            ////app.UseMiddleware()
+            //app.Run(async (context) =>
+            //{
+            //    if (context.Request.Path == "/")
+            //    {
+            //        using (var fileReader = new StreamReader("text.html"))
+            //        {
+            //            var s = fileReader.ReadToEnd();
+            //            await context.Response.WriteAsync(s);
+            //        }
+            //    }
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
 
-            app.UseOrnamentWebSocket(setting =>
-            {
-                setting.RegistHanler<Demos.TextDemoHandler>("/text");
-                setting.RegistHanler<Demos.UploadfileDemoHandler>("/uploadfile");
-
-            });
+            //});
+            app.UseWebSockets();
+            app.UseOrnamentWebSocket();
         }
     }
 }
