@@ -2,18 +2,20 @@
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace Ornament.WebSockets.Handlers
 {
-    public class TextHandler : WebSocketHandler
+    public abstract class TextHandler : WebSocketHandler
     {
-        public Action<OrnamentWebSocket, HttpContext, string, WebSocketHandler> OnReceived;
+  
 
-        public TextHandler(int buffSize = 4096) : base(buffSize)
+        protected TextHandler(IOptions<WebSocketOptions> options) : base(options)
         {
         }
-
+       
         public bool CallByCompleteMessage { get; set; } = true;
 
         protected override void OnReceivedData(OrnamentWebSocket oWebSocket, HttpContext http,
@@ -30,12 +32,22 @@ namespace Ornament.WebSockets.Handlers
                 }
 
                 var message = Encoding.UTF8.GetString(content, 0, receiveResult.Count);
-                OnReceived?.Invoke(oWebSocket, http, message, manager);
+                OnReceived(oWebSocket, http, message);
             }
             else
             {
                 oWebSocket.Buffer.AddRange(content);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="socket"></param>
+        /// <param name="http"></param>
+        /// <param name="data"></param>
+        /// 
+        protected abstract void OnReceived(OrnamentWebSocket socket, HttpContext http, string data);
+
     }
 }

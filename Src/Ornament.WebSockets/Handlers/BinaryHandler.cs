@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Net.WebSockets;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace Ornament.WebSockets.Handlers
 {
@@ -8,10 +10,7 @@ namespace Ornament.WebSockets.Handlers
     /// </summary>
     public abstract class BinaryHandler : WebSocketHandler
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="maxBuffer"></param>
-        protected BinaryHandler(int maxBuffer) : base(maxBuffer)
+        protected BinaryHandler(IOptions<WebSocketOptions> options) : base(options)
         {
         }
 
@@ -39,8 +38,8 @@ namespace Ornament.WebSockets.Handlers
             {
                 if (oWebSocket.Buffer.Any())
                 {
-                    if (oWebSocket.Buffer.Count + content.Length > BuffSize)
-                        throw new BufferOverflowException(BuffSize);
+                    if (oWebSocket.Buffer.Count + content.Length > Options.ReceiveBufferSize)
+                        throw new BufferOverflowException(Options.ReceiveBufferSize);
                     oWebSocket.Buffer.AddRange(content);
 
                     content = oWebSocket.Buffer.ToArray();

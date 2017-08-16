@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Net.WebSockets;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace Ornament.WebSockets.Handlers
 {
@@ -16,10 +18,10 @@ namespace Ornament.WebSockets.Handlers
         /// <param name="bufferSize"></param>
         /// <exception cref="DirectoryNotFoundException">folder not be found</exception>
         /// <exception cref="ArgumentNullException">folder is empty</exception>
-        public FileHandler(string folder,int bufferSize=4096):base(bufferSize)
+        public FileHandler(string folder, IOptions<WebSocketOptions> options) : base(options)
         {
             if (string.IsNullOrEmpty(folder)) throw new ArgumentNullException(nameof(folder));
-          
+
             if (!Directory.Exists(folder))
                 throw new DirectoryNotFoundException(folder + " not found");
 
@@ -32,7 +34,7 @@ namespace Ornament.WebSockets.Handlers
             WebSocketReceiveResult receiveResult,
             WebSocketHandler handler)
         {
-            var file = System.IO.Path.Combine(_folder, _currentPath ?? (_currentPath = Guid.NewGuid().ToString("N")));
+            var file = Path.Combine(_folder, _currentPath ?? (_currentPath = Guid.NewGuid().ToString("N")));
             using (var writer = File.Open(file + ".uploading", FileMode.Append))
             {
                 writer.Write(bytes, 0, receiveResult.Count);
@@ -42,6 +44,14 @@ namespace Ornament.WebSockets.Handlers
                 File.Move(file + ".uploading", file + ".tmp");
                 OnReceived?.Invoke(oWebSocket, http, handler, new FileInfo(file + ".tmp"));
             }
+        }
+
+        protected override void OnClosing(OrnamentWebSocket oWebSocket, HttpContext http)
+        {
+        }
+
+        protected override void OnConnecting(OrnamentWebSocket socket, HttpContext http)
+        {
         }
     }
 }

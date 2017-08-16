@@ -4,34 +4,56 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Ornament.WebSockets.Collections;
 
 namespace Ornament.WebSockets.Handlers
 {
-    public abstract class WebSocketHandler
+    public interface IWebSocketHandler
+    {
+        IEnumerable<OrnamentWebSocket> GetClients();
+        int CountClients();
+
+        bool TryGetWebSocket(string id, out OrnamentWebSocket weboSocket);
+        Task Attach(HttpContext http, WebSocket socket);
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class WebSocketHandler : IWebSocketHandler
+
     {
         private readonly WebSocketCollection _webSockets = new WebSocketCollection();
 
         private WebSocketGroupColllection _groups;
-        public Action<OrnamentWebSocket, HttpContext, WebSocketHandler> OnClosed;
-        public Action<OrnamentWebSocket, HttpContext, WebSocketHandler> OnConnecting;
 
-        protected WebSocketHandler(int buffSize = 4096)
+        //public Action<OrnamentWebSocket, HttpContext, WebSocketHandler> OnClosed;
+        //public Action<OrnamentWebSocket, HttpContext, WebSocketHandler> OnConnecting;
+        protected WebSocketOptions Options;
+
+        protected WebSocketHandler(IOptions<WebSocketOptions> options)
         {
-            if (buffSize < 0)
-                throw new ArgumentOutOfRangeException(nameof(buffSize), "bufferSize should be geater than 0.");
-            BuffSize = buffSize;
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
+            Options = options.Value;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Path { get; internal set; }
-        public int BuffSize { get; }
-        public OrnamentWebSocketManager OrnamentWebSocketManager { get; internal set; }
+        //public OrnamentWebSocketManager OrnamentWebSocketManager { get; internal set; }
 
         public WebSocketGroupColllection Groups => _groups ?? (_groups = new WebSocketGroupColllection());
+
+        public int CountClients()
+        {
+            return _webSockets.CountClients();
+        }
+
+        public IEnumerable<OrnamentWebSocket> GetClients()
+        {
+            return _webSockets.GetClients();
+        }
 
         private OrnamentWebSocket Add(WebSocket socket)
         {
@@ -40,16 +62,16 @@ namespace Ornament.WebSockets.Handlers
             return result;
         }
 
-        internal async Task Attach(HttpContext http, WebSocket socket)
+        public async Task Attach(HttpContext http, WebSocket socket)
         {
             var oWebSocket = Add(socket);
 
-            OnConnecting?.Invoke(oWebSocket, http, this);
+            OnConnecting(oWebSocket, http);
             try
             {
                 while (socket.State == WebSocketState.Open)
                 {
-                    var buffer = new ArraySegment<byte>(new byte[BuffSize]);
+                    var buffer = new ArraySegment<byte>(new byte[Options.ReceiveBufferSize]);
                     var socketReceiveResult = await socket.ReceiveAsync(buffer, CancellationToken.None);
                     if (socketReceiveResult.MessageType == WebSocketMessageType.Close)
                         break;
@@ -73,25 +95,14 @@ namespace Ornament.WebSockets.Handlers
         protected abstract void OnReceivedData(OrnamentWebSocket oWebSocket, HttpContext http, byte[] bytes,
             WebSocketReceiveResult receiveResult, WebSocketHandler handler);
 
-        public int CountClients()
-        {
-            return _webSockets.CountClients();
-        }
-
-        public IEnumerable<OrnamentWebSocket> GetClients()
-        {
-            return _webSockets.GetClients();
-        }
-
         public bool TryGetWebSocket(string id, out OrnamentWebSocket weboSocket)
         {
             weboSocket = _webSockets.Get(id);
             return weboSocket != null;
         }
 
-        protected virtual void OnClosing(OrnamentWebSocket oWebSocket, HttpContext http)
-        {
-            OnClosed?.Invoke(oWebSocket, http, this);
-        }
+
+        protected abstract void OnClosing(OrnamentWebSocket oWebSocket, HttpContext http);
+        protected abstract void OnConnecting(OrnamentWebSocket socket, HttpContext http);
     }
 }

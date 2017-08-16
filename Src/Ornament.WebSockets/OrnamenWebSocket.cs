@@ -16,6 +16,7 @@ namespace Ornament.WebSockets
         private readonly int _bufferLenght;
         private readonly WebSocket _socket;
         private string _group;
+        private WebSocketHandler _handler;
         internal List<byte> Buffer = new List<byte>();
         /// <summary>
         /// 
@@ -52,7 +53,14 @@ namespace Ornament.WebSockets
         /// <summary>
         /// 
         /// </summary>
-        public WebSocketHandler WebSocketHandler { get; internal set; }
+        public WebSocketHandler WebSocketHandler
+        {
+            get { return _handler; }
+            internal set
+            {
+                _handler = value ?? throw new ArgumentNullException(nameof(value), "WebSocketnHandler canot be null");
+            }
+        }
 
         /// <summary>
         /// 

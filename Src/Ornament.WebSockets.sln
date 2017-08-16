@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebAppli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ornament.WebSockets.Json", "Ornament.WebSockets.Json\Ornament.WebSockets.Json.csproj", "{7C6852F0-5EBC-406E-9F75-DD0F831AE8D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestProject1", "XUnitTestProject1\XUnitTestProject1.csproj", "{47624062-9F11-4AE5-8AED-BACA95E869EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestProject1", "XUnitTestProject1\XUnitTestProject1.csproj", "{47624062-9F11-4AE5-8AED-BACA95E869EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Web", "Demo.Web\Demo.Web.csproj", "{F5CEBC16-AC3D-4724-AB44-8BBBC1B3EA4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{47624062-9F11-4AE5-8AED-BACA95E869EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47624062-9F11-4AE5-8AED-BACA95E869EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47624062-9F11-4AE5-8AED-BACA95E869EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5CEBC16-AC3D-4724-AB44-8BBBC1B3EA4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5CEBC16-AC3D-4724-AB44-8BBBC1B3EA4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5CEBC16-AC3D-4724-AB44-8BBBC1B3EA4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5CEBC16-AC3D-4724-AB44-8BBBC1B3EA4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
