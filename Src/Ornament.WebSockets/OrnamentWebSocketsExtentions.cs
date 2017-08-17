@@ -14,10 +14,9 @@ namespace Ornament.WebSockets
         public static IServiceCollection AddOrnamentWebSocket(this IServiceCollection service,
             Action<OrnamentWebSocketManager> webSocketSetting)
         {
-            var manager = new OrnamentWebSocketManager(service);
+            var manager = new OrnamentWebSocketManager();
             webSocketSetting(manager);
             return service.AddSingleton(manager);
-
         }
         /// <summary>
         /// </summary>

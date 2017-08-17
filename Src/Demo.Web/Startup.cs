@@ -18,11 +18,12 @@ namespace Demo.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOrnamentWebSocket(setting =>
-            {
-                setting.RegistHanler<Demos.TextDemoHandler>("/text");
-                setting.RegistHanler<Demos.UploadfileDemoHandler>("/uploadfile");
-
-            });
+           {
+               setting.RegistHanler<Demos.TextDemoHandler>("/text");
+               setting.RegistHanler<Demos.UploadfileDemoHandler>("/uploadfile");
+           });
+            services.AddSingleton<Demos.TextDemoHandler>();
+            services.AddSingleton<Demos.UploadfileDemoHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

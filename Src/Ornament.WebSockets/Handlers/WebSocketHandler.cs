@@ -26,6 +26,7 @@ namespace Ornament.WebSockets.Handlers
     public abstract class WebSocketHandler : IWebSocketHandler
 
     {
+        public static string DefaultGroupName = "DEFAULT";
         private readonly WebSocketCollection _webSockets = new WebSocketCollection();
 
         private WebSocketGroupColllection _groups;
@@ -67,6 +68,13 @@ namespace Ornament.WebSockets.Handlers
             var oWebSocket = Add(socket);
 
             OnConnecting(oWebSocket, http);
+
+            var group = GroupupSocket(oWebSocket, http);
+            if (string.IsNullOrEmpty(group))
+                group = DefaultGroupName;
+
+            this.Groups.Add(oWebSocket, group);
+
             try
             {
                 while (socket.State == WebSocketState.Open)
@@ -87,6 +95,7 @@ namespace Ornament.WebSockets.Handlers
             finally
             {
                 _webSockets.Remove(oWebSocket.Id);
+                Groups.Remove(oWebSocket);
                 OnClosing(oWebSocket, http);
             }
         }
@@ -100,8 +109,16 @@ namespace Ornament.WebSockets.Handlers
             weboSocket = _webSockets.Get(id);
             return weboSocket != null;
         }
-
-
+        /// <summary>
+        /// 为ornament 进行分组。
+        /// </summary>
+        /// <param name="ornamentWeb"></param>
+        /// <param name="http"></param>
+        /// <returns></returns>
+        protected virtual string GroupupSocket(OrnamentWebSocket ornamentWeb, HttpContext http)
+        {
+            return "";
+        }
         protected abstract void OnClosing(OrnamentWebSocket oWebSocket, HttpContext http);
         protected abstract void OnConnecting(OrnamentWebSocket socket, HttpContext http);
     }

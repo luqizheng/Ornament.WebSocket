@@ -16,12 +16,12 @@ namespace Ornament.WebSockets
 
         private readonly Dictionary<string, Type> _pathHandlersMappings =
             new Dictionary<string, Type>();
-        private readonly IServiceCollection services;
 
-        public OrnamentWebSocketManager(IServiceCollection services)
+
+        public OrnamentWebSocketManager()
         {
 
-            this.services = services;
+
         }
 
         /// <summary>
@@ -33,24 +33,46 @@ namespace Ornament.WebSockets
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
-            services.AddSingleton<T>();
-            //handler.Path = path;
+
             lock (_pathHandlersMappings)
             {
                 _pathHandlersMappings.Add(path.ToUpper(), typeof(T));
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="handler"></param>
+        public void RegistHanler(string path, Type handlerType)
+
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+
+            lock (_pathHandlersMappings)
+            {
+                _pathHandlersMappings.Add(path.ToUpper(), handlerType);
+            }
+        }
+
+
         public void RegistHanler<T>(Func<string, bool> matcher)
             where T : WebSocketHandler
         {
             if (matcher == null)
                 throw new ArgumentNullException(nameof(matcher));
-            //handler.Path = path;
-            services.AddSingleton<T>();
-            _matcher.Add(matcher, typeof(T));
+            lock (_matcher)
+                _matcher.Add(matcher, typeof(T));
         }
+        public void RegistHanler(Func<string, bool> matcher, Type type)
 
+        {
+            if (matcher == null)
+                throw new ArgumentNullException(nameof(matcher));
+            lock (_matcher)
+                _matcher.Add(matcher, type);
+        }
         /// <summary>
         /// </summary>
         /// <param name="path"></param>
@@ -58,7 +80,7 @@ namespace Ornament.WebSockets
         public bool GetHandler(IServiceProvider provider, string path, out IWebSocketHandler hanndler)
 
         {
-            
+
             if (path == null)
                 throw new ArgumentNullException(nameof(path));
             hanndler = null;
@@ -83,29 +105,6 @@ namespace Ornament.WebSockets
                     resultType = matcher.Value;
             return resultType;
         }
-
-
-        ///// <summary>
-        ///// 根据id 获取 websocket
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        ///// <exception cref="OrnamentWebSocketException"></exception>
-        //public OrnamentWebSocket GetWebSocket(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(id));
-        //    }
-        //    this.GetHandler()
-        //    foreach (var handlerType in _pathHandlersMappings.Values)
-        //    {
-        //        OrnamentWebSocket webSocket;
-        //        if (handlerType.TryGetWebSocket(id, out webSocket))
-        //            return webSocket;
-        //    }
-        //    throw new OrnamentWebSocketException("Can not found id=" + id + " websocket");
-        //}
 
         /// <summary>
         /// </summary>

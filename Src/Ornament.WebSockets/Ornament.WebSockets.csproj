@@ -16,9 +16,9 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.4.7</Version>
-    <AssemblyVersion>1.4.0.4</AssemblyVersion>
-    <FileVersion>1.4.0.4</FileVersion>
+    <Version>1.4.10</Version>
+    <AssemblyVersion>1.4.0.8</AssemblyVersion>
+    <FileVersion>1.4.0.8</FileVersion>
     <Description>Websocket wrapper for asp.net websocket.</Description>
   </PropertyGroup>
 

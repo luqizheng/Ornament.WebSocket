@@ -28,5 +28,7 @@ namespace Ornament.WebSockets.Collections
             Remove(websocket, websocket.Group);
             websocket.Group = null;
         }
+
+        
     }
 }
