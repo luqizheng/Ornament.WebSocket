@@ -43,7 +43,7 @@ namespace Ornament.WebSockets
         /// <summary>
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="handler"></param>
+        /// <param name="handlerType"></param>
         public void RegistHanler(string path, Type handlerType)
 
         {
@@ -73,9 +73,11 @@ namespace Ornament.WebSockets
             lock (_matcher)
                 _matcher.Add(matcher, type);
         }
+
         /// <summary>
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="provider"></param>
+        /// <param name="hanndler"></param>
         /// <returns></returns>
         public bool GetHandler(IServiceProvider provider, string path, out IWebSocketHandler hanndler)
 

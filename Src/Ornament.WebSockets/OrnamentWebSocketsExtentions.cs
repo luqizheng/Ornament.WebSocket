@@ -3,7 +3,6 @@ using System.Net.WebSockets;
 using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Ornament.WebSockets.Handlers;
 
 namespace Ornament.WebSockets
 {
@@ -18,6 +17,7 @@ namespace Ornament.WebSockets
             webSocketSetting(manager);
             return service.AddSingleton(manager);
         }
+
         /// <summary>
         /// </summary>
         /// <param name="app"></param>
@@ -37,7 +37,6 @@ namespace Ornament.WebSockets
         public static IApplicationBuilder UseOrnamentWebSocket(this IApplicationBuilder app,
             WebSocketOptions options)
         {
-
             app.Use(async (http, next) =>
             {
                 if (http.WebSockets.IsWebSocketRequest)
@@ -45,25 +44,18 @@ namespace Ornament.WebSockets
                     var webSocket = await http.WebSockets.AcceptWebSocketAsync();
                     try
                     {
-
                         var webSocketManager = http.RequestServices.GetService<OrnamentWebSocketManager>();
-                        IWebSocketHandler handler;
-                        if (webSocketManager.GetHandler(http.RequestServices, http.Request.Path, out handler))
-                        {
+                        if (webSocketManager.GetHandler(http.RequestServices, http.Request.Path, out var handler))
                             await handler.Attach(http, webSocket);
-                        }
                         else
-                        {
                             await webSocket.CloseAsync(WebSocketCloseStatus.PolicyViolation,
                                 "没有找到匹配" + http.Request.Path + "的处理器", CancellationToken.None);
-                            //throw new OrnamentWebSocketException($"Cannot find WebSocketHandler for " + http.Request.Path);
-                        }
                     }
                     catch (Exception ex)
                     {
-                        webSocket.CloseAsync(WebSocketCloseStatus.InternalServerError, ex.Message, CancellationToken.None);
+                        webSocket.CloseAsync(WebSocketCloseStatus.InternalServerError, ex.Message,
+                            CancellationToken.None);
                     }
-
                 }
                 else
                 {
