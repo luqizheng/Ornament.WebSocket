@@ -104,7 +104,10 @@ namespace Ornament.WebSockets
                 resultType = _pathHandlersMappings[path.ToUpper()];
             foreach (var matcher in _matcher)
                 if (matcher.Key(path))
+                {
                     resultType = matcher.Value;
+                    break;
+                }
             return resultType;
         }
 
